@@ -24,9 +24,14 @@ public class AppConfig {
         configuration.set("yarn.resourcemanager.address", hadoopHost + ":8032");
         configuration.set("mapreduce.jobhistory.address", hadoopHost + ":10020");
         configuration.set("mapreduce.framework.name", "yarn");
+        String yarnClasspath = "$HADOOP_CLIENT_CONF_DIR,$HADOOP_CONF_DIR,$HADOOP_COMMON_HOME/*," +
+                "$HADOOP_COMMON_HOME/lib/*,$HADOOP_HDFS_HOME/*,$HADOOP_HDFS_HOME/lib/*,$HADOOP_YARN_HOME/*," +
+                "$HADOOP_YARN_HOME/lib/*";
+        String mapredClasspath = "$HADOOP_MAPRED_HOME/*,$HADOOP_MAPRED_HOME/lib/*,/usr/lib/pig/*";
+        configuration.set("yarn.application.classpath", yarnClasspath);
+        configuration.set("mapreduce.application.classpath", mapredClasspath);
         System.out.println("fs.defaultFS: " + configuration.get("fs.defaultFS"));
         System.out.println("yarn.resourcemanager.address: " + configuration.get("yarn.resourcemanager.address"));
-        System.out.println("mapreduce.jobhistory.address: " + configuration.get("mapreduce.jobhistory.address"));
         System.out.println("mapreduce.framework.name: " + configuration.get("mapreduce.framework.name"));
         return configuration;
     }
