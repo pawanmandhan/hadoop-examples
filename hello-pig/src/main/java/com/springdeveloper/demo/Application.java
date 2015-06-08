@@ -5,6 +5,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.data.hadoop.fs.FsShell;
 import org.springframework.data.hadoop.pig.PigTemplate;
 
 @ComponentScan
@@ -12,6 +13,8 @@ import org.springframework.data.hadoop.pig.PigTemplate;
 public class Application implements CommandLineRunner {
 
     private PigTemplate pigTemplate;
+
+    private FsShell fsShell;
 
     public static void main(String[] args) {
         SpringApplication.run(Application.class, args);
@@ -22,6 +25,11 @@ public class Application implements CommandLineRunner {
         this.pigTemplate = pigTemplate;
     }
 
+    @Autowired
+    public void setFsShell(FsShell fsShell) {
+        this.fsShell = fsShell;
+    }
+
     @Override
     public void run(String... strings) throws Exception {
         System.out.println("*** Hello Pig:");
@@ -30,6 +38,8 @@ public class Application implements CommandLineRunner {
                 "top10 = LIMIT sorted 10;" +
                 "STORE top10 INTO '/test/results';";
         pigTemplate.executeScript(script);
+        System.out.println("*** Results:");
+        System.out.println(fsShell.cat("/test/results/*"));
     }
 
 }
